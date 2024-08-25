@@ -19,7 +19,7 @@ const TabsLayout = () => {
         return (
             <View className='justify-center items-center'>
                 <Image source={icon} resizeMode='contain' tintColor={color} className='w-6 h-6'></Image>
-                <Text className={`${focused ? "font-psemibold text-blue-700" : "font-pregular"} text-xs`}>{name}</Text>
+                <Text style={{ color: color }} className={`${focused ? "font-psemibold" : "font-pregular"} text-xs`}>{name}</Text>
             </View>
         )
     }
@@ -29,6 +29,14 @@ const TabsLayout = () => {
             <Tabs
                 screenOptions={{
                     tabBarShowLabel: false,
+                    tabBarActiveTintColor: "#33bcff",
+                    tabBarInactiveTintColor: "#7f98a4",
+                    tabBarStyle: {
+                        backgroundColor: '#d3dfe5',
+                        borderTopWidth: 1,
+                        borderTopColor: '#589bbc',
+                        height: "10%",
+                    }
                 }}
             >
                 <Tabs.Screen
@@ -71,7 +79,6 @@ const TabsLayout = () => {
                         )
                     }}
                 />
-
             </Tabs>
         </>
     )
