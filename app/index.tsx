@@ -1,15 +1,24 @@
 import { View, Text, StyleSheet, ScrollView, Image, Button, TouchableOpacity } from "react-native";
-import { Link } from "expo-router";
+import { Link, Redirect } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from 'expo-linear-gradient';
 
 import { images } from "../constants"
 import { styled } from 'nativewind';
 import { useRouter } from 'expo-router';
+import { useGlobalContext } from "@/context/GlobalProvider";
 
 const StyledLinearGradient = styled(LinearGradient);
 
 export default function App() {
+
+    const { isLoading, isLogged } = useGlobalContext();
+
+    if (!isLoading && isLogged) {
+        return (
+            <Redirect href={"/home"}></Redirect>
+        )
+    }
 
     const router = useRouter()
 

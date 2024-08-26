@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Image, TextInput, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, Image, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { styled } from 'nativewind';
@@ -6,14 +6,31 @@ import { styled } from 'nativewind';
 import { images } from "../../constants"
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
+import { createUser, signIn } from '@/lib/appwrite';
 
 const StyledLinearGradient = styled(LinearGradient);
 
 const SignUp = () => {
-    const [name, setName] = useState<string | undefined>('');
-    const [email, setEmail] = useState<string | undefined>('');
-    const [password, setPassword] = useState<string | null>('');
+    const [name, setName] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(false);
     const router = useRouter();
+
+    const signUp = async () => {
+        setLoading(true);
+        if (name && email && password) {
+            createUser(email, password, name);
+            try {
+                const response = await signIn(email, password);
+            } catch (e: any) {
+            }
+        }
+        else {
+            Alert.alert("Error", "Please fill up the form!")
+        }
+        setLoading(false);
+    }
 
 
     return (
@@ -54,14 +71,17 @@ const SignUp = () => {
                             className="w-5/6 rounded-md p-2" // p-[2px] creates a border-like effect by providing a gradient outline
                         >
                             <TouchableOpacity
-                                onPress={() => {
-
-                                }}
+                                onPress={signUp}
                                 className="bg-transparent rounded-md p-3"
                             >
-                                <Text className="text-white font-semibold text-center">
-                                    Sign Up
-                                </Text>
+                                {
+                                    loading ? (
+                                        <ActivityIndicator size="large" color="#0000ff" />
+                                    ) : (
+                                        <Text className='text-center text-white font-psemibold'>Sign Up</Text>
+                                    )
+                                }
+
                             </TouchableOpacity>
 
                         </StyledLinearGradient>
