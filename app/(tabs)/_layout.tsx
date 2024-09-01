@@ -1,4 +1,4 @@
-import { View, Text, Image, ImageSourcePropType } from 'react-native'
+import { View, Text, Image, ImageSourcePropType, KeyboardAvoidingView, Platform } from 'react-native'
 import React from 'react'
 import { Tabs, Redirect } from 'expo-router'
 
@@ -12,13 +12,10 @@ type TabIconProps = {
 };
 
 const TabsLayout = () => {
-
-
-
     const TabIcon: React.FC<TabIconProps> = ({ icon, color, name, focused }) => {
         return (
             <View className='justify-center items-center'>
-                <Image source={icon} resizeMode='contain' tintColor={color} className='w-6 h-6'></Image>
+                <Image source={icon} resizeMode='contain' tintColor={color} className={`w-6 h-6`}></Image>
                 <Text style={{ color: color }} className={`${focused ? "font-psemibold" : "font-pregular"} text-xs`}>{name}</Text>
             </View>
         )
@@ -29,14 +26,23 @@ const TabsLayout = () => {
             <Tabs
                 screenOptions={{
                     tabBarShowLabel: false,
-                    tabBarActiveTintColor: "#33bcff",
-                    tabBarInactiveTintColor: "#7f98a4",
+                    tabBarActiveTintColor: "#EDF6F9",
+                    tabBarInactiveTintColor: "#9A8873",
                     tabBarStyle: {
-                        backgroundColor: '#d3dfe5',
-                        borderTopWidth: 1,
-                        borderTopColor: '#589bbc',
-                        height: "10%",
-                    }
+                        backgroundColor: '#37423D',
+                        position: 'absolute',
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        margin: 20,
+                        height: 70,
+                        borderRadius: 50,
+                        width: "90%",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        borderTopWidth: 0
+                    },
+                    tabBarHideOnKeyboard: false
                 }}
             >
                 <Tabs.Screen
@@ -50,12 +56,22 @@ const TabsLayout = () => {
                     }}
                 />
                 <Tabs.Screen
-                    name='bookmark'
+                    name='search'
                     options={{
-                        title: 'Bookmark',
+                        title: 'search',
                         headerShown: false,
                         tabBarIcon: ({ color, focused }) => (
-                            <TabIcon icon={icons.bookmark} color={color} name={"Bookmark"} focused={focused}></TabIcon>
+                            <TabIcon icon={icons.search} color={color} name={"search"} focused={focused}></TabIcon>
+                        )
+                    }}
+                />
+                <Tabs.Screen
+                    name='saved'
+                    options={{
+                        title: 'saved',
+                        headerShown: false,
+                        tabBarIcon: ({ color, focused }) => (
+                            <TabIcon icon={icons.bookmark} color={color} name={"saved"} focused={focused}></TabIcon>
                         )
                     }}
                 />
