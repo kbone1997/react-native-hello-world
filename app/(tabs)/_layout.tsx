@@ -92,8 +92,10 @@ const TabsLayout = () => {
                         headerShown: false,
                         tabBarIcon: ({ color, focused }) => (
                             <TabIcon icon={icons.profile} color={color} name={"profile"} focused={focused}></TabIcon>
-                        )
+                        ),
+                        tabBarStyle: { display: 'none' },
                     }}
+
                 />
             </Tabs>
         </>

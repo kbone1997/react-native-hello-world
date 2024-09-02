@@ -37,17 +37,15 @@ const Home = () => {
 
     return (
         <SafeAreaView className='bg-colorBlack flex w-full h-full pt-12'>
-
-            <View className='flex w-full items-center justify-center gap-2'>
+            <View className='flex w-full items-center justify-center'>
                 <Text className='text-colorWhite text-3xl text-center font-psemibold items-center justify-center'>Today's Date</Text>
             </View>
-
             <FlatList
                 contentContainerStyle={
                     {
-                        width: '90%', // Set FlatList container width to 90%
-                        alignSelf: 'center', // Center the container horizontally
-                        marginTop: 10, // Optional: Adjust top margin if needed
+                        width: '90%',
+                        alignSelf: 'center',
+                        marginTop: 10,
                         paddingBottom: 100
                     }
                 }
@@ -65,7 +63,6 @@ const Home = () => {
                             resizeMode='cover'
                         />
                         <View className='flex-row items-center justify-between mt-2 '>
-
                             <View className='flex flex-row items-center justify-center gap-2'>
                                 <Text className='text-sm font-psemibold text-colorWhite'>Likes: {item.likes}</Text>
                                 <TouchableOpacity
@@ -76,7 +73,6 @@ const Home = () => {
                                 >
                                     <Image source={icons.thumbsUp} resizeMode='contain' className={`w-6 h-6 `}></Image>
                                 </TouchableOpacity>
-
                                 <TouchableOpacity
                                     onPress={() => {
 
