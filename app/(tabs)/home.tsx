@@ -39,9 +39,9 @@ const Home = () => {
     ];
 
     return (
-        <SafeAreaView className='bg-colorBlack flex w-full h-full pt-12'>
+        <SafeAreaView className='bg-colorWhite dark:bg-colorBlack flex w-full h-full pt-12'>
             <View className='flex w-full items-center justify-center'>
-                <Text className='text-colorWhite text-3xl text-center font-psemibold items-center justify-center'>Today's Date</Text>
+                <Text className='text-colorBlack dark:text-colorWhite text-3xl text-center font-psemibold items-center justify-center'>Today's Date</Text>
             </View>
             <FlatList
                 contentContainerStyle={
@@ -57,18 +57,18 @@ const Home = () => {
                 renderItem={({ item }) => (
                     <View className='p-4 bg-colorTest'>
                         <View className='flex-row justify-between mt-2 '>
-                            <Text className='text-lg font-psemibold text-colorWhite '>{item.username}</Text>
-                            <Text className='text-sm text-colorWhite'>{item.following ? 'Following' : 'Not Following'}</Text>
+                            <Text className='text-lg font-psemibold text-colorBlack dark:text-colorWhite '>{item.username}</Text>
+                            <Text className='text-sm text-colorBlack dark:text-colorWhite'>{item.following ? 'Following' : 'Not Following'}</Text>
                         </View>
                         <Image
                             source={item.media}
                             className='w-full h-80 rounded-lg mt-2'
                             resizeMode='cover'
                         />
-                        <Text className='text-sm opacity-80 text-colorWhite'> {item.description}</Text>
+                        <Text className='text-sm opacity-80 text-colorBlack dark:text-colorWhite'> {item.description}</Text>
                         <View className='flex-row items-center justify-between mt-2 '>
                             <View className='flex flex-row items-center justify-center gap-2'>
-                                <Text className='text-sm font-psemibold text-colorWhite'>Likes: {item.likes}</Text>
+                                <Text className='text-sm font-psemibold text-colorBlack dark:text-colorWhite'>Likes: {item.likes}</Text>
                                 <TouchableOpacity
                                     onPress={() => {
 
@@ -86,7 +86,7 @@ const Home = () => {
                                     <Image source={icons.thumbsDown} resizeMode='contain' className={`w-6 h-6`}></Image>
                                 </TouchableOpacity>
                             </View>
-                            <Text className='text-sm font-psemibold text-colorWhite'>Comments: {item.comments}</Text>
+                            <Text className='text-sm font-psemibold text-colorBlack dark:text-colorWhite'>Comments: {item.comments}</Text>
                         </View>
                     </View>
                 )}

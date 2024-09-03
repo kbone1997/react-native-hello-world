@@ -13,6 +13,8 @@ import eye from "../assets/icons/eye.png";
 import play from "../assets/icons/play.png";
 import thumbsUp from "../assets/icons/thumbsUp.png";
 import thumbsDown from "../assets/icons/thumbsDown.png";
+import dark from "../assets/icons/dark-mode.png";
+import light from "../assets/icons/brightness.png";
 
 export default {
   play,
@@ -29,5 +31,7 @@ export default {
   eyeHide,
   eye,
   thumbsUp,
-  thumbsDown
+  thumbsDown,
+  dark,
+  light
 };

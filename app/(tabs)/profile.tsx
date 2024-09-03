@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { icons, images } from '@/constants'
 import { useNavigation } from '@react-navigation/native';
+import { useColorScheme } from "nativewind";
 
 const { width } = Dimensions.get('window');
 
@@ -53,19 +54,28 @@ const photos = [
 const Profile = () => {
     const [currentTab, setCurrentTab] = useState(0);
     const navigation = useNavigation();
+    const { colorScheme, toggleColorScheme } = useColorScheme();
 
     return (
-        <SafeAreaView className='bg-colorBlack w-full h-full pt-12'>
+        <SafeAreaView className='bg-colorwhite dark:bg-colorBlack w-full h-full pt-12'>
             {/* Header */}
 
-            <TouchableOpacity
-                onPress={() => {
-                    navigation.goBack();
-                }}
-                className=" p-4 z-50"
-            >
-                <Image source={icons.leftArrow} resizeMode='contain' className='w-6 h-6' />
-            </TouchableOpacity>
+            <View className='flex flex-row items-center justify-between ml-2 mr-2'>
+                <TouchableOpacity
+                    onPress={() => {
+                        navigation.goBack();
+                    }}
+                    className=" p-4 z-50"
+                >
+                    <Image source={icons.leftArrow} resizeMode='contain' className='w-6 h-6' />
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={toggleColorScheme}
+                    className=" p-4 z-50"
+                >
+                    <Image source={colorScheme === "light" ? icons.light : icons.dark} resizeMode='contain' className='w-6 h-6' />
+                </TouchableOpacity>
+            </View>
 
 
             {/* Profile Image and Info */}
@@ -75,7 +85,7 @@ const Profile = () => {
                     resizeMode='cover'
                     className='w-32 h-32 rounded-full border-4 border-white'
                 />
-                <Text className='text-colorWhite text-base mt-2'>John Doe</Text>
+                <Text className='text-colorBlack dark:text-colorWhite text-base mt-2'>John Doe</Text>
                 <View className='flex flex-row w-1/2 mt-2 justify-between'>
                     <TouchableOpacity
                         onPress={() => { console.log('Edit Profile clicked') }}
@@ -94,30 +104,30 @@ const Profile = () => {
                 {/* Stats */}
                 <View className='flex flex-row w-5/6 justify-between mt-4'>
                     <View className='flex flex-col items-center'>
-                        <Text className='text-colorWhite text-base text-center'>92</Text>
+                        <Text className='text-colorBlack dark:text-colorWhite text-base text-center'>92</Text>
                         <TouchableOpacity
                             onPress={() => { console.log('Journals pressed') }}
                             className="rounded-full"
                         >
-                            <Text className='text-colorWhite text-base font-pmedium'>Journals</Text>
+                            <Text className='text-colorBlack dark:text-colorWhite text-base font-pmedium'>Journals</Text>
                         </TouchableOpacity>
                     </View>
                     <View className='flex flex-col items-center'>
-                        <Text className='text-colorWhite text-base text-center'>20k</Text>
+                        <Text className='text-colorBlack dark:text-colorWhite text-base text-center'>20k</Text>
                         <TouchableOpacity
                             onPress={() => { console.log('Followers pressed') }}
                             className="rounded-full"
                         >
-                            <Text className='text-colorWhite text-base font-pmedium'>Followers</Text>
+                            <Text className='text-colorBlack dark:text-colorWhite text-base font-pmedium'>Followers</Text>
                         </TouchableOpacity>
                     </View>
                     <View className='flex flex-col items-center'>
-                        <Text className='text-colorWhite text-base text-center'>109</Text>
+                        <Text className='text-colorBlack dark:text-colorWhite text-base text-center'>109</Text>
                         <TouchableOpacity
                             onPress={() => { console.log('Following pressed') }}
                             className="rounded-full"
                         >
-                            <Text className='text-colorWhite text-base font-pmedium'>Following</Text>
+                            <Text className='text-colorBlack dark:text-colorWhite text-base font-pmedium'>Following</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -129,13 +139,13 @@ const Profile = () => {
                             onPress={() => { setCurrentTab(0) }}
                             className="rounded-full"
                         >
-                            <Text className={`text-colorWhite text-base ${currentTab === 0 ? "font-psemibold" : "opacity-40"}`}>Journals</Text>
+                            <Text className={`text-colorBlack dark:text-colorWhite text-base ${currentTab === 0 ? "font-psemibold" : "opacity-40"}`}>Journals</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             onPress={() => { setCurrentTab(1) }}
                             className="rounded-full"
                         >
-                            <Text className={`text-colorWhite text-base ${currentTab === 1 ? "font-psemibold" : "opacity-40"}`}>Uploads</Text>
+                            <Text className={`text-colorBlack dark:text-colorWhite text-base ${currentTab === 1 ? "font-psemibold" : "opacity-40"}`}>Uploads</Text>
                         </TouchableOpacity>
                     </View>
                     <View
@@ -145,12 +155,12 @@ const Profile = () => {
             </View>
 
             {/* ScrollView for Journals and Photos */}
-            <View className='bg-colorGreenish w-full h-full rounded-3xl mt-[5%]'>
+            <View className='bg-colorOffWhite dark:bg-colorGreenish w-full h-full rounded-3xl mt-[5%]'>
                 <ScrollView
                     className='mt-[65%] rounded-sm mb-[25%] p-2'
                     style={{
                         marginHorizontal: 6,
-                        backgroundColor: "#6A7F5D"
+                        backgroundColor: colorScheme === "light" ? "#EDF6F9" : "#6A7F5D"
                     }}
                 >
                     {
@@ -162,9 +172,9 @@ const Profile = () => {
 
                                             <TouchableOpacity className='p-2'
                                                 onPress={() => { }}>
-                                                <Text className='text-colorWhite text-lg font-bold'>{journal.title}</Text>
-                                                <Text className='text-colorWhite text-sm mt-1'>{journal.date}</Text>
-                                                <Text className='text-colorWhite text-base mt-2'>{journal.content}</Text>
+                                                <Text className='text-colorBlack dark:text-colorWhite text-base font-bold'>{journal.title}</Text>
+                                                <Text className='text-colorBlack dark:text-colorWhite text-sm mt-1'>{journal.date}</Text>
+                                                <Text className='text-colorBlack dark:text-colorWhite text-sm mt-2'>{journal.content}</Text>
                                             </TouchableOpacity>
                                             <View
                                                 className='border-b-2 border-b-colorBrown m-2'
