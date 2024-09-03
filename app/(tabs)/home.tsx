@@ -16,6 +16,7 @@ const Home = () => {
             media: images.profile,
             likes: 120,
             comments: 45,
+            description: "This is for testing description below image! 🌞"
         },
         {
             id: 2,
@@ -24,6 +25,7 @@ const Home = () => {
             media: images.profile,
             likes: 85,
             comments: 20,
+            description: "This is for testing description below image! 🌞"
         },
         {
             id: 3,
@@ -32,6 +34,7 @@ const Home = () => {
             media: images.profile,
             likes: 200,
             comments: 78,
+            description: "This is for testing description below image! 🌞"
         },
     ];
 
@@ -43,7 +46,7 @@ const Home = () => {
             <FlatList
                 contentContainerStyle={
                     {
-                        width: '90%',
+                        width: '95%',
                         alignSelf: 'center',
                         marginTop: 10,
                         paddingBottom: 100
@@ -52,7 +55,7 @@ const Home = () => {
                 data={posts}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
-                    <View className='p-4 bg-colorTest m-2 rounded-lg border-2 border-colorWhite '>
+                    <View className='p-4 bg-colorTest'>
                         <View className='flex-row justify-between mt-2 '>
                             <Text className='text-lg font-psemibold text-colorWhite '>{item.username}</Text>
                             <Text className='text-sm text-colorWhite'>{item.following ? 'Following' : 'Not Following'}</Text>
@@ -62,6 +65,7 @@ const Home = () => {
                             className='w-full h-80 rounded-lg mt-2'
                             resizeMode='cover'
                         />
+                        <Text className='text-sm opacity-80 text-colorWhite'> {item.description}</Text>
                         <View className='flex-row items-center justify-between mt-2 '>
                             <View className='flex flex-row items-center justify-center gap-2'>
                                 <Text className='text-sm font-psemibold text-colorWhite'>Likes: {item.likes}</Text>
