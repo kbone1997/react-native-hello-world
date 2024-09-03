@@ -3,6 +3,7 @@ import React, { useEffect } from 'react'
 import { Slot, SplashScreen, Stack } from 'expo-router'
 import { useFonts } from "expo-font"
 import { GlobalProvider } from '@/context/GlobalProvider';
+import { PaperProvider } from 'react-native-paper';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -34,12 +35,14 @@ const RootLayout = () => {
 
     return (
         <GlobalProvider>
-            <Stack>
-                <Stack.Screen name='index' options={{ headerShown: false }}></Stack.Screen>
-                <Stack.Screen name='(auth)' options={{ headerShown: false }}></Stack.Screen>
-                <Stack.Screen name='(tabs)' options={{ headerShown: false }}></Stack.Screen>
-                {/* <Stack.Screen name='/search/[query]' options={{ headerShown: false }}></Stack.Screen> */}
-            </Stack>
+            <PaperProvider>
+                <Stack>
+                    <Stack.Screen name='index' options={{ headerShown: false }}></Stack.Screen>
+                    <Stack.Screen name='(auth)' options={{ headerShown: false }}></Stack.Screen>
+                    <Stack.Screen name='(tabs)' options={{ headerShown: false }}></Stack.Screen>
+                    {/* <Stack.Screen name='/search/[query]' options={{ headerShown: false }}></Stack.Screen> */}
+                </Stack>
+            </PaperProvider>
         </GlobalProvider>
 
 

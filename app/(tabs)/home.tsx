@@ -55,7 +55,7 @@ const Home = () => {
                 data={posts}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
-                    <View className='p-4 bg-colorTest'>
+                    <View className='p-4 bg-colorTest rounded-2xl mb-2'>
                         <View className='flex-row justify-between mt-2 '>
                             <Text className='text-lg font-psemibold text-colorBlack dark:text-colorWhite '>{item.username}</Text>
                             <Text className='text-sm text-colorBlack dark:text-colorWhite'>{item.following ? 'Following' : 'Not Following'}</Text>
