@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TextInput, Image, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native'
+import { View, Text, FlatList, TextInput, Image, KeyboardAvoidingView, Platform, TouchableOpacity, RefreshControl, } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { images } from '@/constants'
@@ -6,6 +6,7 @@ import { icons } from '@/constants'
 
 const Home = () => {
     const [searchText, setSearchText] = useState('');
+    const [refreshing, setRefreshing] = useState(false);
 
     // Example data structure
     const posts = [
@@ -38,12 +39,20 @@ const Home = () => {
         },
     ];
 
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        setTimeout(() => {
+            setRefreshing(false);
+        }, 2000);
+    }, []);
+
     return (
         <SafeAreaView className='bg-colorWhite dark:bg-colorBlack flex w-full h-full pt-12'>
             <View className='flex w-full items-center justify-center'>
                 <Text className='text-colorBlack dark:text-colorWhite text-3xl text-center font-psemibold items-center justify-center'>Today's Date</Text>
             </View>
             <FlatList
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                 contentContainerStyle={
                     {
                         width: '95%',

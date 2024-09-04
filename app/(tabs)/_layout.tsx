@@ -42,7 +42,7 @@ const TabsLayout = () => {
                         justifyContent: "center",
                         borderTopWidth: 0
                     },
-                    tabBarHideOnKeyboard: false
+                    tabBarHideOnKeyboard: true
                 }}
             >
                 <Tabs.Screen
