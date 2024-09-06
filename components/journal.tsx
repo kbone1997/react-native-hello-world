@@ -3,8 +3,9 @@ import React, { useState } from 'react';
 import { Menu, Divider } from 'react-native-paper';
 import { useColorScheme } from 'nativewind';
 import Swipe from '@/components/swipe';
-import * as ImagePicker from 'expo-image-picker'; // Import ImagePicker
-import { uploadJournalPost } from '@/lib/appwrite';
+import * as DocumentPicker from 'expo-document-picker'; // Import ImagePicker
+import * as ImageManipulator from 'expo-image-manipulator';
+import { uploadDocument } from '@/lib/appwrite';
 
 const Journal = () => {
     const { colorScheme } = useColorScheme();
@@ -15,7 +16,7 @@ const Journal = () => {
     const [journalState, setJournalState] = useState<string>("new");
     const [addNewState, setAddNewState] = useState<string>("Add Text");
     const [modalVisible, setModalVisible] = useState<boolean>(false);
-    const [fields, setFields] = useState<Array<{ type: 'text' | 'image'; value?: string }>>([]); // State for fields
+    const [fields, setFields] = useState<Array<{ type: 'text' | 'image'; id?: string; value?: string; file?: any }>>([]); // State for fields
 
     const openMenu = () => setVisible(true);
     const closeMenu = () => setVisible(false);
@@ -23,22 +24,60 @@ const Journal = () => {
     const closeMenu1 = () => setVisible1(false);
 
     const handleJournalPost = async () => {
-        const response = await uploadJournalPost(fields, journalName)
+        const response = await uploadDocument(journalName, fields)
         console.log("response :", response)
     }
 
+    const compressImageToSize = async (uri: string, targetSizeKB: number) => {
+        let quality = 1; // Start with maximum quality
+        let manipulatedImage = await ImageManipulator.manipulateAsync(
+            uri,
+            [{ resize: { width: 800 } }], // Resize if necessary
+            { compress: quality, format: ImageManipulator.SaveFormat.JPEG }
+        );
+
+        // Iterate to adjust quality until the file size is less than or equal to the target size
+        while (true) {
+            const fileInfo = await fetch(manipulatedImage.uri);
+            const fileSizeKB = (await fileInfo.blob()).size / 1024; // Convert bytes to KB
+
+            if (fileSizeKB <= targetSizeKB || quality <= 0.1) {
+                // If file size is acceptable or quality is too low, stop iterating
+                break;
+            }
+
+            quality -= 0.1; // Decrease quality
+            manipulatedImage = await ImageManipulator.manipulateAsync(
+                uri,
+                [{ resize: { width: 800 } }], // Resize if necessary
+                { compress: quality, format: ImageManipulator.SaveFormat.JPEG }
+            );
+        }
+
+        return manipulatedImage.uri;
+    };
+
     // Image picker logic
     const pickImage = async () => {
-        const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
+        try {
+            const result = await DocumentPicker.getDocumentAsync({
+                type: ["image/png", "image/jpg", "image/jpeg"]
+            });
 
-        if (!result.canceled) {
-            const uri = result.assets[0].uri;
-            setFields([...fields, { type: 'image', value: uri }]);
+            if (!result.canceled) {
+                const uri = result.assets[0].uri;
+                console.log("Picked image: ", result);
+
+                // Compress image to target size (700 KB)
+                const compressedUri = await compressImageToSize(uri, 700);
+                // console.log("Compressed image URI: ", compressedUri);
+                result.assets[0].uri = compressedUri;
+
+                // Update state with the compressed image
+                setFields([...fields, { type: 'image', value: compressedUri, file: result.assets[0] }]);
+            }
+        } catch (error) {
+            console.error("Error picking or compressing image:", error);
         }
     };
 
@@ -173,7 +212,7 @@ const Journal = () => {
                             placeholderTextColor={text === "" ? "#d0d5d6" : textColor}
                         />
                     ) : (
-                        field.value && <Image source={{ uri: field.value }} className='w-full h-80 rounded-lg m-0 mt-2' resizeMode='contain' />
+                        field.value && <Image id={index.toString()} source={{ uri: field.value }} className='w-full h-80 rounded-lg m-0 mt-2' resizeMode='contain' />
                     )}
                 </View>
             ))}
@@ -219,8 +258,6 @@ const Journal = () => {
             <View className='flex h-80 justify-center items-center'>
                 <Swipe
                     onComplete={() => {
-                        //handle upload here
-                        console.log('fields: ', fields)
                         handleJournalPost()
                     }
                     }
