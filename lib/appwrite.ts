@@ -1,4 +1,5 @@
-import { Account, Avatars, Client, Databases, ID, Query } from 'react-native-appwrite';
+import { PRIVATE_APPWRITE_API_KEY } from '@/env';
+import { Account, Avatars, Client, Databases, ID, Query, Storage } from 'react-native-appwrite';
 
 export const appwriteConfig = {
     endpoint: "https://cloud.appwrite.io/v1",
@@ -9,6 +10,7 @@ export const appwriteConfig = {
     imagesCollectionId: "66cccf4b000856fc1918",
     videoCollectionId: "66cccf3d0033a4c6eacb",
     storageId: "66ccd352001f88f45871",
+    journalsId: "66da28ef000dca8b98d1",
 }
 
 
@@ -24,6 +26,7 @@ client
 const account = new Account(client);
 const avatar = new Avatars(client);
 const databases = new Databases(client);
+const storage = new Storage(client);
 
 export const createUser = async (email: string, password: string, username: string) => {
     try {
@@ -88,6 +91,66 @@ export const getCurrentUser = async () => {
         throw new Error(e);
     }
 }
+
+
+const createBlobFromUri = async (uri: string): Promise<Blob> => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    return blob;
+};
+
+export const uploadJournalPost = async (fields: Array<{ type: 'text' | 'image'; value?: string }>, journalName: string) => {
+    const formData = new FormData();
+
+    // Add metadata
+    formData.append('title', journalName);
+
+    // Add text fields and image blobs
+    const imagePromises: Promise<void>[] = [];
+
+    fields.forEach((field, index) => {
+        if (field.type === 'text' && field.value) {
+            formData.append(`text_${index}`, field.value);
+        } else if (field.type === 'image' && field.value) {
+            imagePromises.push(
+                createBlobFromUri(field.value!).then((blob) => {
+                    formData.append(`image_${index}`, blob, `image_${index}.jpg`);
+                }).catch(error => {
+                    console.error('Error creating blob:', error);
+                })
+            );
+        }
+    });
+
+    // Wait for all image blobs to be created and appended
+    await Promise.all(imagePromises);
+
+    // Send form data to Appwrite
+    try {
+        const currentUser = await getCurrentUser();
+        const sessionToken = currentUser.$sessionId;
+
+        const response = await fetch(`${appwriteConfig.endpoint}/databases/${appwriteConfig.databaseId}/collections/${appwriteConfig.journalsId}/documents`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${sessionToken}`, // Use session token for authentication
+                'Content-Type': 'multipart/form-data',
+                'X-Appwrite-Project': appwriteConfig.projectId,
+            },
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log('Upload successful:', result);
+    } catch (error: any) {
+        console.error('Upload failed:', error.message);
+    }
+};
+
 
 
 
